@@ -165,7 +165,7 @@ function renderMeta() {
   if (missing.length > 0) {
     const note = document.getElementById("missing-note");
     note.hidden = false;
-    note.textContent = `Not yet included in the stats (details missing): ${missing.map(p => p.name).join(", ")}.`;
+    note.textContent = `Not yet included in the stats (details not found yet, will retry automatically): ${missing.map(p => p.name).join(", ")}.`;
   }
 }
 

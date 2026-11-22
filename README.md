@@ -20,13 +20,17 @@ Open `index.html` in a browser (all four site files must be in the same folder).
 
 ## When a new player enters the top 100
 
-They show up in the country tab straight away, but are left out of the other stats and a
-notice on the page names them. To include them, add an entry to `player-details.json`:
+Nothing to do. The script looks the player up on Wikipedia (height, hand, backhand) and saves
+them in `player-details.json`, marked `"auto"`, so the stats include them straight away.
+
+If nothing usable is found (new players sometimes have no height listed), they appear in the
+country tab, are left out of the other stats, and the lookup is retried every week. A notice on
+the page names them. You can fill one in by hand at any time:
 
     "New Player": { "height": 185, "hand": "R", "backhand": "2H" }
 
-If the source spells a name differently, add `"aliases": ["Source Spelling"]` to the entry.
-The workflow log lists who is missing after each run.
+Automatic entries come from Wikipedia and could occasionally be wrong; the Action's log lists
+each one so you can double-check if you like.
 
 ## Run it yourself
 
