@@ -160,14 +160,18 @@ function setupTabs() {
 // ---------- Header date ----------
 
 function renderMeta() {
-  document.getElementById("updated").textContent = `rankings dated ${LAST_UPDATED}`;
+  const el = document.getElementById("updated");
+  if (el) el.textContent = `rankings dated ${LAST_UPDATED}`;
 }
 
 // ---------- Start ----------
+// Each step runs on its own, so one problem can't blank the whole page.
 
-renderMeta();
-renderLefties();
-renderOneHanders();
-renderCountries();
-renderHeight();
-setupTabs();
+[renderMeta, renderLefties, renderOneHanders, renderCountries, renderHeight, setupTabs]
+  .forEach(step => {
+    try {
+      step();
+    } catch (error) {
+      console.error(`${step.name} failed:`, error);
+    }
+  });
