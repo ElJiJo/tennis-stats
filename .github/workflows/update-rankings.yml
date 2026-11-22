@@ -1,0 +1,28 @@
+name: Update ATP rankings
+
+on:
+  schedule:
+    - cron: "0 12 * * 2"   # every Tuesday at 12:00 UTC (the source page updates on Mondays)
+  workflow_dispatch:        # also lets you run it manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh players.js
+        run: python3 update_rankings.py
+      - name: Commit if rankings changed
+        run: |
+          if [ -n "$(git status --porcelain players.js)" ]; then
+            git config user.name "rankings-bot"
+            git config user.email "rankings-bot@users.noreply.github.com"
+            git add players.js
+            git commit -m "Update ATP rankings"
+            git push
+          else
+            echo "No changes."
+          fi
