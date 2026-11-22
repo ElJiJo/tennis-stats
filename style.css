@@ -93,3 +93,6 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 }
 
 footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 10px 16px 30px; }
+
+/* ---------- Flags ---------- */
+.flag { width: 24px; height: auto; vertical-align: middle; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.15); }

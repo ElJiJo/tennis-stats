@@ -6,17 +6,43 @@
 // ---------- Helpers ----------
 
 const COUNTRY_NAMES = {
-  ARG: "Argentina", AUS: "Australia", BEL: "Belgium", BIH: "Bosnia & Herzegovina",
-  BRA: "Brazil", CAN: "Canada", CHI: "Chile", CHN: "China", CRO: "Croatia",
-  CZE: "Czechia", ESP: "Spain", FRA: "France", GBR: "Great Britain", GEO: "Georgia",
-  GER: "Germany", GRE: "Greece", HKG: "Hong Kong", HUN: "Hungary", ITA: "Italy",
-  KAZ: "Kazakhstan", MON: "Monaco", NED: "Netherlands", NOR: "Norway", PAR: "Paraguay",
-  PER: "Peru", POL: "Poland", POR: "Portugal", RUS: "Russia", SRB: "Serbia",
-  SVK: "Slovakia", USA: "United States",
+  ARG: "Argentina", AUS: "Australia", AUT: "Austria", BEL: "Belgium", BIH: "Bosnia & Herzegovina",
+  BOL: "Bolivia", BRA: "Brazil", BUL: "Bulgaria", CAN: "Canada", CHI: "Chile", CHN: "China",
+  COL: "Colombia", CRO: "Croatia", CZE: "Czechia", DEN: "Denmark", DOM: "Dominican Republic",
+  ECU: "Ecuador", ESP: "Spain", EST: "Estonia", FIN: "Finland", FRA: "France", GBR: "Great Britain",
+  GEO: "Georgia", GER: "Germany", GRE: "Greece", HKG: "Hong Kong", HUN: "Hungary", IND: "India",
+  IRL: "Ireland", ISR: "Israel", ITA: "Italy", JPN: "Japan", KAZ: "Kazakhstan", KOR: "South Korea",
+  LAT: "Latvia", LTU: "Lithuania", LUX: "Luxembourg", MEX: "Mexico", MON: "Monaco", NED: "Netherlands",
+  NOR: "Norway", NZL: "New Zealand", PAR: "Paraguay", PER: "Peru", POL: "Poland", POR: "Portugal",
+  ROU: "Romania", RSA: "South Africa", RUS: "Russia", SLO: "Slovenia", SRB: "Serbia", SUI: "Switzerland",
+  SVK: "Slovakia", SWE: "Sweden", TPE: "Chinese Taipei", TUN: "Tunisia", TUR: "Turkey", UKR: "Ukraine",
+  URU: "Uruguay", USA: "United States", UZB: "Uzbekistan", VEN: "Venezuela",
+};
+
+// The ranking source uses 3-letter sports codes; flag images are named by 2-letter ISO codes.
+const FLAG_CODES = {
+  ARG: "ar", AUS: "au", AUT: "at", BEL: "be", BIH: "ba", BOL: "bo", BRA: "br", BUL: "bg", CAN: "ca",
+  CHI: "cl", CHN: "cn", COL: "co", CRO: "hr", CZE: "cz", DEN: "dk", DOM: "do", ECU: "ec", ESP: "es",
+  EST: "ee", FIN: "fi", FRA: "fr", GBR: "gb", GEO: "ge", GER: "de", GRE: "gr", HKG: "hk", HUN: "hu",
+  IND: "in", IRL: "ie", ISR: "il", ITA: "it", JPN: "jp", KAZ: "kz", KOR: "kr", LAT: "lv", LTU: "lt",
+  LUX: "lu", MEX: "mx", MON: "mc", NED: "nl", NOR: "no", NZL: "nz", PAR: "py", PER: "pe", POL: "pl",
+  POR: "pt", ROU: "ro", RSA: "za", RUS: "ru", SLO: "si", SRB: "rs", SUI: "ch", SVK: "sk", SWE: "se",
+  TPE: "tw", TUN: "tn", TUR: "tr", UKR: "ua", URU: "uy", USA: "us", UZB: "uz", VEN: "ve",
 };
 
 function countryName(code) {
   return COUNTRY_NAMES[code] || code;
+}
+
+// Flag image (from flagcdn.com) with the country name as a hover tooltip.
+// Unknown codes fall back to the plain 3-letter code.
+function flag(code) {
+  const name = countryName(code);
+  const iso = FLAG_CODES[code];
+  if (!iso) return `<span title="${name}">${code}</span>`;
+  return `<img class="flag" src="https://flagcdn.com/w40/${iso}.png"
+    srcset="https://flagcdn.com/w80/${iso}.png 2x" width="24" height="18"
+    alt="${name}" title="${name}" loading="lazy">`;
 }
 
 // 188 -> "6'2\""
@@ -31,7 +57,7 @@ function playersTable(players) {
     <tr>
       <td class="num">${p.rank}</td>
       <td>${p.name}</td>
-      <td>${countryName(p.country)}</td>
+      <td>${flag(p.country)}</td>
       <td class="num">${p.height} cm</td>
     </tr>`).join("");
   return `
@@ -98,7 +124,7 @@ function renderCountries() {
   const rows = sorted.map(([code, players]) => `
     <div class="country-row">
       <div class="country-head">
-        <span class="country-name">${countryName(code)}</span>
+        <span class="country-name">${flag(code)} ${countryName(code)}</span>
         <div class="bar-track"><div class="bar" style="width:${(players.length / maxCount) * 100}%"></div></div>
         <span class="country-count">${players.length}</span>
       </div>
