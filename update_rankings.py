@@ -38,6 +38,15 @@ def normalize(name):
     return re.sub(r"[^a-z]", "", name.lower())
 
 
+def spelling_variant(name, details, used):
+    """Same last name + same first letter as exactly one known player not yet matched
+    (e.g. 'Alexander Shevchenko' vs 'Aleksandr Shevchenko')."""
+    parts = normalize(name.split()[-1]), normalize(name)[:1]
+    candidates = [n for n in details
+                  if n not in used and normalize(n.split()[-1]) == parts[0] and normalize(n)[:1] == parts[1]]
+    return candidates[0] if len(candidates) == 1 else None
+
+
 def download(url):
     req = urllib.request.Request(url, headers={"User-Agent": "tennis-stats-site/1.0"})
     with urllib.request.urlopen(req, timeout=30) as resp:
@@ -159,9 +168,17 @@ def main():
         for alias in d.get("aliases", []):
             lookup[normalize(alias)] = (name, d)
 
+    # Players matched by exact name first, so the spelling fallback only uses leftovers.
+    used = {lookup[normalize(p["name"])][0] for p in ranking if normalize(p["name"]) in lookup}
+
     lines, missing, auto_added = [], [], []
     for p in ranking:
         match = lookup.get(normalize(p["name"]))
+        if not match:
+            variant = spelling_variant(p["name"], details, used)
+            if variant:
+                match = (variant, details[variant])
+                used.add(variant)
         if not match and not args.no_lookup:
             # New to the top 100: try to find their details automatically.
             found = lookup_new_player(p["name"])

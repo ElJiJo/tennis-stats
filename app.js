@@ -157,16 +157,10 @@ function setupTabs() {
   });
 }
 
-// ---------- Header date and missing-details notice ----------
+// ---------- Header date ----------
 
 function renderMeta() {
   document.getElementById("updated").textContent = `rankings dated ${LAST_UPDATED}`;
-  const missing = PLAYERS.filter(p => p.height === null);
-  if (missing.length > 0) {
-    const note = document.getElementById("missing-note");
-    note.hidden = false;
-    note.textContent = `Not yet included in the stats (details not found yet, will retry automatically): ${missing.map(p => p.name).join(", ")}.`;
-  }
 }
 
 // ---------- Start ----------

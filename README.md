@@ -24,8 +24,8 @@ Nothing to do. The script looks the player up on Wikipedia (height, hand, backha
 them in `player-details.json`, marked `"auto"`, so the stats include them straight away.
 
 If nothing usable is found (new players sometimes have no height listed), they appear in the
-country tab, are left out of the other stats, and the lookup is retried every week. A notice on
-the page names them. You can fill one in by hand at any time:
+country tab, are left out of the other stats, and the lookup is retried every week. The
+workflow log names them (the website itself shows nothing). You can fill one in by hand:
 
     "New Player": { "height": 185, "hand": "R", "backhand": "2H" }
 
