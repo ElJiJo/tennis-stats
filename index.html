@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ATP Top 100 Stats</title>
+  <!-- Favicon: yellow tennis ball -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,17 +20,21 @@
 
   <!-- Tab buttons: data-tab must match the id of a <section> below -->
   <nav class="tabs">
-    <button data-tab="lefties" class="active">Left-handers</button>
+    <button data-tab="top100" class="active">Top 100</button>
+    <button data-tab="lefties">Left-handers</button>
     <button data-tab="onehanders">One-handed backhand</button>
     <button data-tab="countries">By country</button>
     <button data-tab="height">Average height</button>
+    <button data-tab="slams">Grand Slam winners</button>
   </nav>
 
   <main>
-    <section id="lefties" class="panel active"></section>
+    <section id="top100" class="panel active"></section>
+    <section id="lefties" class="panel"></section>
     <section id="onehanders" class="panel"></section>
     <section id="countries" class="panel"></section>
     <section id="height" class="panel"></section>
+    <section id="slams" class="panel"></section>
   </main>
 
   <footer>
@@ -32,6 +42,7 @@
   </footer>
 
   <script src="players.js"></script>
+  <script src="grand-slams.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

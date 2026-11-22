@@ -1,6 +1,6 @@
 # ATP Top 100 Stats
 
-Open `index.html` in a browser (all four site files must be in the same folder).
+Open `index.html` in a browser (all the site files must be in the same folder).
 
 ## How the data stays up to date
 
@@ -11,6 +11,18 @@ Open `index.html` in a browser (all four site files must be in the same folder).
 - `.github/workflows/update-rankings.yml` runs the script every Tuesday and commits
   `players.js` if the rankings changed. You can also run it from the repo's **Actions** tab
   ("Run workflow").
+
+## Grand Slam winners tab (automatic)
+
+The same weekly run also refreshes `grand-slams.js`. It reads Wikipedia's year-by-year table of
+Grand Slam champions, counts each player's titles per tournament, and keeps only players who
+are still ranked and have no "retired" date on their Wikipedia page. A new champion or a
+retirement is picked up on the next run, so there is nothing to edit by hand.
+
+Safety: if the table can't be read, a count disagrees with Wikipedia's own "(n/total)" figure,
+or a player's titles would go down, the script leaves `grand-slams.js` as it was and prints
+`GRAND SLAMS NOT UPDATED` plus the reason in the Action's log. Wikipedia can take a few days to
+record a new title, so the tab may lag a Slam by up to a week.
 
 ## One-time setup (GitHub Pages)
 

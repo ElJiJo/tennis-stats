@@ -11,7 +11,7 @@ const PLAYERS = [
   { rank: 3, name: "Carlos Alcaraz", country: "ESP", height: 183, hand: "R", backhand: "2H" },
   { rank: 4, name: "Ben Shelton", country: "USA", height: 193, hand: "L", backhand: "2H" },
   { rank: 5, name: "Daniil Medvedev", country: "RUS", height: 198, hand: "R", backhand: "2H" },
-  { rank: 6, name: "Flavio Cobolli", country: "ITA", height: 173, hand: "R", backhand: "2H" },
+  { rank: 6, name: "Flavio Cobolli", country: "ITA", height: 183, hand: "R", backhand: "2H" },
   { rank: 7, name: "Arthur Fils", country: "FRA", height: 185, hand: "R", backhand: "2H" },
   { rank: 8, name: "Frances Tiafoe", country: "USA", height: 188, hand: "R", backhand: "2H" },
   { rank: 9, name: "Taylor Fritz", country: "USA", height: 196, hand: "R", backhand: "2H" },

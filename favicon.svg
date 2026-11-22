@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Tennis ball</title>
+  <defs>
+    <clipPath id="ball"><circle cx="32" cy="32" r="30"/></clipPath>
+  </defs>
+  <!-- yellow ball -->
+  <circle cx="32" cy="32" r="30" fill="#FFD60A"/>
+  <!-- white seams (clipped to the ball) -->
+  <g clip-path="url(#ball)" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round">
+    <path d="M6 6 C26 22 26 42 6 58"/>
+    <path d="M58 6 C38 22 38 42 58 58"/>
+  </g>
+  <!-- thin darker outline -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#D4A800" stroke-width="2"/>
+</svg>

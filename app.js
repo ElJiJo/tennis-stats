@@ -57,12 +57,12 @@ function playersTable(players) {
     <tr>
       <td class="num">${p.rank}</td>
       <td>${p.name}</td>
-      <td>${flag(p.country)}</td>
+      <td class="center">${flag(p.country)}</td>
       <td class="num">${p.height} cm</td>
     </tr>`).join("");
   return `
     <table>
-      <thead><tr><th class="num">Rank</th><th>Player</th><th>Country</th><th class="num">Height</th></tr></thead>
+      <thead><tr><th class="num">Rank</th><th>Player</th><th class="center">Country</th><th class="num">Height</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 }
@@ -75,7 +75,41 @@ function percent(count) {
   return Math.round((count / COMPLETE.length) * 100);
 }
 
-// ---------- Tab 1: left-handers ----------
+// ---------- Tab 1: Top 100 rankings ----------
+// Every player in the ranking. Players that are not in player-details.json yet
+// (height is null) are shown with "-" for the details.
+
+function renderTop100() {
+  const rows = PLAYERS.map(p => {
+    const hand = p.hand === null ? "-" : p.hand === "L" ? '<span class="pill">Left</span>' : "Right";
+    const backhand = p.backhand === null ? "-" : p.backhand === "1H" ? '<span class="pill">One-handed</span>' : "Two-handed";
+    return `
+    <tr>
+      <td class="num">${p.rank}</td>
+      <td>${p.name}</td>
+      <td class="center">${flag(p.country)}</td>
+      <td class="num">${p.height === null ? "-" : p.height + " cm"}</td>
+      <td>${hand}</td>
+      <td>${backhand}</td>
+    </tr>`;
+  }).join("");
+
+  document.getElementById("top100").innerHTML = `
+    <div class="card">
+      <h2>Top 100 rankings</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th class="num">Rank</th><th>Player</th><th class="center">Country</th>
+            <th class="num">Height</th><th>Plays</th><th>Backhand</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ---------- Tab 2: left-handers ----------
 
 function renderLefties() {
   const lefties = COMPLETE.filter(p => p.hand === "L");
@@ -90,7 +124,7 @@ function renderLefties() {
     </div>`;
 }
 
-// ---------- Tab 2: one-handed backhands ----------
+// ---------- Tab 3: one-handed backhands ----------
 
 function renderOneHanders() {
   const oneHanders = COMPLETE.filter(p => p.backhand === "1H");
@@ -105,7 +139,7 @@ function renderOneHanders() {
     </div>`;
 }
 
-// ---------- Tab 3: players by country ----------
+// ---------- Tab 4: players by country ----------
 
 function renderCountries() {
   // Group players by country code: { ITA: [player, player...], ... }
@@ -139,7 +173,7 @@ function renderCountries() {
     </div>`;
 }
 
-// ---------- Tab 4: average height ----------
+// ---------- Tab 5: average height ----------
 
 function renderHeight() {
   const total = COMPLETE.reduce((sum, p) => sum + p.height, 0);
@@ -169,6 +203,56 @@ function renderHeight() {
     </div>`;
 }
 
+// ---------- Tab 6: Grand Slam winners (active players) ----------
+// Data comes from grand-slams.js. Sorted by total titles; ties are ordered by
+// current ATP ranking and share a position (shown as "T5").
+
+function renderSlams() {
+  const rows = GRAND_SLAM_WINNERS
+    .map(w => {
+      const inRanking = PLAYERS.find(p => p.name === w.name);
+      return { ...w, atpRank: inRanking ? inRanking.rank : null, total: w.ao + w.rg + w.wim + w.uso };
+    })
+    .sort((a, b) => b.total - a.total || (a.atpRank ?? 999) - (b.atpRank ?? 999));
+
+  const dash = n => n || "-";
+
+  const body = rows.map(w => {
+    const firstWithSameTotal = rows.findIndex(r => r.total === w.total);
+    const tied = rows.filter(r => r.total === w.total).length > 1;
+    const position = (tied ? "T" : "") + (firstWithSameTotal + 1);
+    return `
+    <tr>
+      <td class="num">${position}</td>
+      <td>${w.name}</td>
+      <td class="center">${flag(w.country)}</td>
+      <td class="num">${w.atpRank ?? "-"}</td>
+      <td class="num">${dash(w.ao)}</td>
+      <td class="num">${dash(w.rg)}</td>
+      <td class="num">${dash(w.wim)}</td>
+      <td class="num">${dash(w.uso)}</td>
+      <td class="num total">${w.total}</td>
+    </tr>`;
+  }).join("");
+
+  document.getElementById("slams").innerHTML = `
+    <div class="card">
+      <h2>Active Grand Slam winners</h2>
+      <p class="muted">Active men's singles players with at least one Grand Slam title, ranked by titles won.
+        AO = Australian Open, RG = Roland Garros, W = Wimbledon, USO = US Open.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th class="num">#</th><th>Player</th><th class="center">Country</th><th class="num">ATP rank</th>
+            <th class="num">AO</th><th class="num">RG</th><th class="num">W</th><th class="num">USO</th><th class="num">Total</th>
+          </tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:0.85rem">Retired champions (Nadal, Murray, Thiem, Wawrinka) are not included.</p>
+    </div>`;
+}
+
 // ---------- Tab switching ----------
 
 function setupTabs() {
@@ -193,7 +277,7 @@ function renderMeta() {
 // ---------- Start ----------
 // Each step runs on its own, so one problem can't blank the whole page.
 
-[renderMeta, renderLefties, renderOneHanders, renderCountries, renderHeight, setupTabs]
+[renderMeta, renderTop100, renderLefties, renderOneHanders, renderCountries, renderHeight, renderSlams, setupTabs]
   .forEach(step => {
     try {
       step();

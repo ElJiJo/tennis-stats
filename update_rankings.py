@@ -5,6 +5,9 @@ Refreshes players.js with the current ATP top 100.
   rank / name / country  -> scraped from Tennis Abstract (updated weekly)
   height / hand / backhand -> read from player-details.json (these never change)
 
+It also refreshes grand-slams.js (active Grand Slam winners and their titles) from
+Wikipedia's year-by-year table of Grand Slam champions; see update_grand_slams() below.
+
 If a player in the new top 100 is not in player-details.json, the script looks
 them up on Wikipedia and saves the result there (entries marked "auto"). If
 nothing is found, they still appear in the rankings but are left out of the
@@ -23,6 +26,7 @@ import re
 import sys
 import time
 import unicodedata
+from html.parser import HTMLParser
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -146,6 +150,163 @@ def parse_rankings(page):
     return [rows[r] for r in sorted(rows)], (updated.group(1) if updated else "unknown")
 
 
+# ---------- Grand Slam winners (Wikipedia year-by-year table) ----------
+
+SLAM_PAGE = "List of Grand Slam men's singles champions"
+SLAM_KEYS = ["ao", "rg", "wim", "uso"]       # Australian Open, Roland Garros, Wimbledon, US Open
+
+
+class _TableParser(HTMLParser):
+    """Collects every <table> of a page as a list of rows, each a list of cell texts."""
+
+    def __init__(self):
+        super().__init__()
+        self.tables, self._row, self._cell, self._skip = [], None, None, 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "table":
+            self.tables.append([])
+        elif tag == "tr" and self.tables:
+            self._row = []
+            self.tables[-1].append(self._row)
+        elif tag in ("td", "th") and self._row is not None:
+            self._cell = []
+        elif tag in ("sup", "style", "script"):       # footnote marks like [1] are ignored
+            self._skip += 1
+
+    def handle_endtag(self, tag):
+        if tag in ("td", "th") and self._cell is not None and self._row is not None:
+            text = "".join(self._cell).replace("\xa0", " ")
+            self._row.append(re.sub(r"\s+", " ", text).strip())
+            self._cell = None
+        elif tag in ("sup", "style", "script") and self._skip:
+            self._skip -= 1
+
+    def handle_data(self, data):
+        if self._cell is not None and not self._skip:
+            self._cell.append(data)
+
+
+def parse_all_ranked(page):
+    """Every ranked player (not only the top 100): {normalized name: (name, country)}."""
+    text = html.unescape(re.sub(r"<[^>]+>", " ", page))
+    text = re.sub(r"\s+", " ", text)
+    row = re.compile(r"(?<!\d)\d{1,4} ([^\d]+?) ([A-Z]{3}) \d{4}-\d{2}-\d{2}")
+    return {normalize(m.group(1)): (m.group(1).strip(), m.group(2)) for m in row.finditer(text)}
+
+
+def parse_slam_table(page_html):
+    """Reads the year-by-year champions table. Returns {name: {ao, rg, wim, uso, claimed}} for
+    titles won since 2000, where 'claimed' is the career total Wikipedia prints as (n/total).
+    Returns None if the table cannot be found."""
+    parser = _TableParser()
+    parser.feed(page_html)
+
+    best = []
+    for table in parser.tables:
+        rows = [r for r in table if len(r) >= 5 and re.fullmatch(r"\d{4}", r[0])]
+        if len(rows) > len(best):
+            best = rows
+    if len(best) < 10:
+        return None
+
+    wins = {}
+    for r in best:
+        if int(r[0]) < 2000:
+            continue
+        for key, cell in zip(SLAM_KEYS, r[1:5]):
+            m = re.match(r"(.+?)\s*\((\d+)/(\d+)\)", cell)
+            name = (m.group(1) if m else cell).strip(" *†‡")
+            if not name:                                  # tournament not played yet this year
+                continue
+            w = wins.setdefault(name, {"ao": 0, "rg": 0, "wim": 0, "uso": 0, "claimed": 0})
+            w[key] += 1
+            if m:
+                w["claimed"] = max(w["claimed"], int(m.group(3)))
+    return wins or None
+
+
+def is_retired(name):
+    """True if the player's Wikipedia infobox has a 'retired' date. Any error -> False."""
+    try:
+        data = wiki_get_json({"action": "query", "prop": "revisions", "rvprop": "content",
+                              "rvslots": "main", "titles": name, "redirects": 1})
+        wikitext = data["query"]["pages"][0]["revisions"][0]["slots"]["main"]["content"]
+        value = re.sub(r"<!--.*?-->", "", infobox_field(wikitext, "retired"), flags=re.S)
+        return bool(value.strip())
+    except Exception as e:
+        print(f"  (could not check retirement for {name}: {e})")
+        return False
+
+
+def active_slam_winners(wins, ranked, retired_check=is_retired):
+    """Keeps players who are still ranked and not retired. Returns (list, problems)."""
+    winners, problems = [], []
+    for wiki_name, w in wins.items():
+        match = ranked.get(normalize(wiki_name))
+        if not match:                                     # not on the ranking list: retired long ago
+            continue
+        name, country = match
+        total = w["ao"] + w["rg"] + w["wim"] + w["uso"]
+        if w["claimed"] and w["claimed"] != total:        # self-check against Wikipedia's own count
+            problems.append(f"{name}: counted {total} titles but Wikipedia says {w['claimed']}")
+        if retired_check(wiki_name):
+            print(f"  (excluded {name}: retired)")
+            continue
+        winners.append({"name": name, "country": country,
+                        "ao": w["ao"], "rg": w["rg"], "wim": w["wim"], "uso": w["uso"]})
+    winners.sort(key=lambda p: (-(p["ao"] + p["rg"] + p["wim"] + p["uso"]), p["name"]))
+    return winners, problems
+
+
+def read_old_slam_totals():
+    path = HERE / "grand-slams.js"
+    if not path.exists():
+        return {}
+    return {m.group(1): sum(int(x) for x in m.groups()[1:]) for m in re.finditer(
+        r'name: "([^"]+)".*?ao: (\d+),\s*rg: (\d+),\s*wim: (\d+),\s*uso: (\d+)',
+        path.read_text(encoding="utf-8"))}
+
+
+def update_grand_slams(ranking_page):
+    """Rewrites grand-slams.js. Never raises: on any doubt it keeps the existing file."""
+    try:
+        data = wiki_get_json({"action": "parse", "page": SLAM_PAGE, "prop": "text", "redirects": 1})
+        wins = parse_slam_table(data["parse"]["text"])
+        if not wins:
+            print("\nGRAND SLAMS NOT UPDATED: could not find the champions table on Wikipedia.")
+            return
+        winners, problems = active_slam_winners(wins, parse_all_ranked(ranking_page))
+
+        old = read_old_slam_totals()
+        for p in winners:                                 # titles can only go up
+            total = p["ao"] + p["rg"] + p["wim"] + p["uso"]
+            if p["name"] in old and total < old[p["name"]]:
+                problems.append(f'{p["name"]}: {total} titles is fewer than the {old[p["name"]]} already saved')
+        if not winners:
+            problems.append("no active winners found")
+        if problems:
+            print("\nGRAND SLAMS NOT UPDATED (data looked wrong, grand-slams.js kept as it was):")
+            for pr in problems:
+                print("  " + pr)
+            return
+
+        lines = ["  { name: %s, country: %s, ao: %d, rg: %d, wim: %d, uso: %d },"
+                 % (json.dumps(p["name"]), json.dumps(p["country"]), p["ao"], p["rg"], p["wim"], p["uso"])
+                 for p in winners]
+        (HERE / "grand-slams.js").write_text(
+            "// AUTO-GENERATED by update_rankings.py - do not edit by hand.\n"
+            "// Active men's singles Grand Slam winners, from Wikipedia's table of Slam champions.\n"
+            "// ao = Australian Open, rg = Roland Garros, wim = Wimbledon, uso = US Open.\n\n"
+            "const GRAND_SLAM_WINNERS = [\n" + "\n".join(lines) + "\n];\n", encoding="utf-8")
+        print("\ngrand-slams.js updated: " + ", ".join(
+            f'{p["name"]} ({p["ao"] + p["rg"] + p["wim"] + p["uso"]})' for p in winners))
+        for gone in sorted(set(old) - {p["name"] for p in winners}):
+            print(f"  (no longer listed: {gone})")
+    except Exception as e:
+        print(f"\nGRAND SLAMS NOT UPDATED ({type(e).__name__}: {e}); grand-slams.js kept as it was.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--html", help="read this saved HTML file instead of downloading")
@@ -216,6 +377,8 @@ def main():
             json.dumps(details, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print(f"players.js updated (rankings dated {updated}).")
+    if not args.no_lookup:
+        update_grand_slams(page)
     if auto_added:
         print("\nNew players added automatically (entries marked \"auto\" in player-details.json):")
         for m in auto_added:
