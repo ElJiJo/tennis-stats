@@ -1,0 +1,508 @@
+{
+ "Alexander Zverev": {
+  "height": 198,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Jannik Sinner": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Carlos Alcaraz": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Ben Shelton": {
+  "height": 193,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Daniil Medvedev": {
+  "height": 198,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Flavio Cobolli": {
+  "height": 173,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Arthur Fils": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Frances Tiafoe": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Taylor Fritz": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Rafael Jodar": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Alex de Minaur": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Novak Djokovic": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Tommy Paul": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Jiri Lehecka": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Jakub Mensik": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Alejandro Davidovich Fokina": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Felix Auger-Aliassime": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Casper Ruud": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Brandon Nakashima": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Francisco Cerundolo": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Luciano Darderi": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Learner Tien": {
+  "height": 180,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Andrey Rublev": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Karen Khachanov": {
+  "height": 198,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Alexander Bublik": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Valentin Vacherot": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Lorenzo Musetti": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "1H"
+ },
+ "Alexander Blockx": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Tomas Martin Etcheverry": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Hubert Hurkacz": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Alejandro Tabilo": {
+  "height": 188,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Arthur Fery": {
+  "height": 175,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Ignacio Buse": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Luca Van Assche": {
+  "height": 178,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Alex Michelsen": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Stefanos Tsitsipas": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "1H"
+ },
+ "Matteo Arnaldi": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Ugo Humbert": {
+  "height": 188,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Jan-Lennard Struff": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Botic van de Zandschulp": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Nuno Borges": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Daniel Merida": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H",
+  "aliases": [
+   "Daniel Merida Aguilar"
+  ]
+ },
+ "Matteo Berrettini": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Zizou Bergs": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Quentin Halys": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Joao Fonseca": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Thiago Agustin Tirante": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Arthur Gea": {
+  "height": 180,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Mariano Navone": {
+  "height": 178,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Tallon Griekspoor": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Denis Shapovalov": {
+  "height": 185,
+  "hand": "L",
+  "backhand": "1H"
+ },
+ "Cameron Norrie": {
+  "height": 188,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Sebastian Baez": {
+  "height": 170,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Juan Manuel Cerundolo": {
+  "height": 183,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Raphael Collignon": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Adolfo Daniel Vallejo": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Jaime Faria": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Arthur Rinderknech": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Rinky Hijikata": {
+  "height": 178,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Tomas Machac": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Adrian Mannarino": {
+  "height": 180,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Mattia Bellucci": {
+  "height": 175,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Fabian Marozsan": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Miomir Kecmanovic": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Camilo Ugo Carabelli": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Facundo Diaz Acosta": {
+  "height": 183,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Yannick Hanfmann": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Ethan Quinn": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Vit Kopriva": {
+  "height": 178,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Jaume Munar": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Martin Landaluce": {
+  "height": 193,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Daniel Altmaier": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "1H"
+ },
+ "Alex Molcan": {
+  "height": 178,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Roman Safiullin": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Terence Atmane": {
+  "height": 193,
+  "hand": "L",
+  "backhand": "2H"
+ },
+ "Pablo Carreno Busta": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "James Duckworth": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Zachary Svajda": {
+  "height": 175,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Hamad Medjedovic": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Roman Andres Burruchaga": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Titouan Droguet": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Kamil Majchrzak": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Aleksandar Kovacevic": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "1H"
+ },
+ "Coleman Wong": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Nikoloz Basilashvili": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Kyrian Jacquet": {
+  "height": 175,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Jacob Fearnley": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Marco Trungelliti": {
+  "height": 178,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Dino Prizmic": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Damir Dzumhur": {
+  "height": 175,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Benjamin Bonzi": {
+  "height": 183,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Toby Samuel": {
+  "height": 191,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Bu Yunchaokete": {
+  "height": 185,
+  "hand": "R",
+  "backhand": "2H",
+  "aliases": [
+   "Yunchaokete Bu"
+  ]
+ },
+ "Jenson Brooksby": {
+  "height": 196,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Marcos Giron": {
+  "height": 180,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Zsombor Piros": {
+  "height": 180,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Adam Walton": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Michael Zheng": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Marin Cilic": {
+  "height": 198,
+  "hand": "R",
+  "backhand": "2H"
+ },
+ "Aleksandr Shevchenko": {
+  "height": 188,
+  "hand": "R",
+  "backhand": "2H"
+ }
+}

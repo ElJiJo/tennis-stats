@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ATP Top 100 Stats</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>ATP Top 100 Stats</h1>
+    <p class="subtitle">Men's singles &middot; <span id="updated"></span></p>
+  </header>
+
+  <!-- Tab buttons: data-tab must match the id of a <section> below -->
+  <nav class="tabs">
+    <button data-tab="lefties" class="active">Left-handers</button>
+    <button data-tab="onehanders">One-handed backhand</button>
+    <button data-tab="countries">By country</button>
+    <button data-tab="height">Average height</button>
+  </nav>
+
+  <p id="missing-note" class="muted" hidden style="text-align:center;margin:12px 16px 0"></p>
+
+  <main>
+    <section id="lefties" class="panel active"></section>
+    <section id="onehanders" class="panel"></section>
+    <section id="countries" class="panel"></section>
+    <section id="height" class="panel"></section>
+  </main>
+
+  <footer>
+    Rankings update automatically (<code>players.js</code>); player details are in <code>player-details.json</code>. Sources: ATP Tour, Tennis Abstract, Wikipedia.
+  </footer>
+
+  <script src="players.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
