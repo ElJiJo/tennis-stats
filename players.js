@@ -105,5 +105,5 @@ const PLAYERS = [
   { rank: 97, name: "Adam Walton", country: "AUS", height: 188, hand: "R", backhand: "2H" },
   { rank: 98, name: "Michael Zheng", country: "USA", height: 188, hand: "R", backhand: "2H" },
   { rank: 99, name: "Marin Cilic", country: "CRO", height: 198, hand: "R", backhand: "2H" },
-  { rank: 100, name: "Aleksandr Shevchenko", country: "KAZ", height: 188, hand: "R", backhand: "2H" },
+  { rank: 100, name: "Alexander Shevchenko", country: "KAZ", height: null, hand: null, backhand: null },
 ];
