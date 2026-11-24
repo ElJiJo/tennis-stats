@@ -7,6 +7,8 @@ Refreshes players.js with the current ATP top 100.
 
 It also refreshes grand-slams.js (active Grand Slam winners and their titles) from
 Wikipedia's year-by-year table of Grand Slam champions; see update_grand_slams() below.
+And masters.js (this year's Masters 1000 champions) from Wikipedia's page for the season;
+see update_masters() below.
 
 If a player in the new top 100 is not in player-details.json, the script looks
 them up on Wikipedia and saves the result there (entries marked "auto"). If
@@ -20,6 +22,7 @@ Usage:
 Only uses the Python standard library.
 """
 import argparse
+import datetime
 import html
 import json
 import re
@@ -307,6 +310,107 @@ def update_grand_slams(ranking_page):
         print(f"\nGRAND SLAMS NOT UPDATED ({type(e).__name__}: {e}); grand-slams.js kept as it was.")
 
 
+# ---------- Masters 1000 champions of the current year (Wikipedia season page) ----------
+
+# (id, label shown on the site, lowercase words that identify the row on Wikipedia), in calendar order.
+MASTERS_EVENTS = [
+    ("indian-wells", "Indian Wells", ["indian wells"]),
+    ("miami",        "Miami",        ["miami"]),
+    ("monte-carlo",  "Monte-Carlo",  ["monte"]),
+    ("madrid",       "Madrid",       ["madrid"]),
+    ("rome",         "Rome",         ["italian", "rome"]),
+    ("canada",       "Canada",       ["canadian", "toronto", "montreal"]),
+    ("cincinnati",   "Cincinnati",   ["cincinnati"]),
+    ("shanghai",     "Shanghai",     ["shanghai"]),
+    ("paris",        "Paris",        ["paris"]),
+]
+
+
+def parse_masters_table(page_html):
+    """Reads the 'Singles champions' table of a season page.
+    Returns ({event id: (champion, runner-up)}, problems), or (None, problems) if no table is found.
+    Events without a champion yet are simply missing from the result."""
+    parser = _TableParser()
+    parser.feed(page_html)
+
+    rows = []
+    for table in parser.tables:
+        if any(len(r) >= 3 and "singles champion" in r[1].lower() for r in table):
+            rows = [r for r in table if len(r) >= 3]
+            break
+    if not rows:
+        return None, ["could not find the 'Singles champions' table"]
+
+    found, problems = {}, []
+    for r in rows:
+        label = r[0].lower()
+        event = next((e for e in MASTERS_EVENTS if any(k in label for k in e[2])), None)
+        champion = r[1].strip(" *†‡")
+        runner_up = r[2].strip(" *†‡")
+        if not event or champion.lower() in ("", "tbd", "tba", "-", "—", "–") or "singles champion" in champion.lower():
+            continue
+        if re.search(r"\d", champion) or len(champion) > 40:
+            problems.append(f"{event[1]}: strange champion text {champion!r}")
+            continue
+        if event[0] in found:
+            if found[event[0]][0] != champion:        # the same tournament listed twice, disagreeing
+                problems.append(f"{event[1]}: listed with two champions ({found[event[0]][0]} / {champion})")
+            continue
+        found[event[0]] = (champion, runner_up)
+    return found, problems
+
+
+def read_old_masters():
+    """(year, number of champions) of the saved masters.js, or (None, 0)."""
+    path = HERE / "masters.js"
+    if not path.exists():
+        return None, 0
+    text = path.read_text(encoding="utf-8")
+    year = re.search(r"MASTERS_YEAR = (\d{4})", text)
+    return (int(year.group(1)) if year else None), len(re.findall(r'champion: "', text))
+
+
+def update_masters(ranking_page):
+    """Rewrites masters.js. Never raises: on any doubt it keeps the existing file."""
+    try:
+        year = datetime.date.today().year
+        data = wiki_get_json({"action": "parse", "page": f"{year} ATP Masters 1000 tournaments",
+                              "prop": "text", "redirects": 1})
+        found, problems = parse_masters_table(data["parse"]["text"])
+        if found is None or problems:
+            print("\nMASTERS NOT UPDATED (masters.js kept as it was):")
+            for pr in problems:
+                print("  " + pr)
+            return
+
+        old_year, old_count = read_old_masters()
+        if old_year == year and len(found) < old_count:   # champions can't disappear within a season
+            print(f"\nMASTERS NOT UPDATED: found {len(found)} champions, fewer than the {old_count} already saved.")
+            return
+
+        ranked = parse_all_ranked(ranking_page)           # for spelling and country of each champion
+        lines = []
+        for event_id, label, _ in MASTERS_EVENTS:
+            if event_id not in found:
+                lines.append("  { id: %s, tournament: %s, champion: null, country: null, runnerUp: null },"
+                             % (json.dumps(event_id), json.dumps(label)))
+                continue
+            champion, runner_up = found[event_id]
+            name, country = ranked.get(normalize(champion), (champion, None))
+            lines.append("  { id: %s, tournament: %s, champion: %s, country: %s, runnerUp: %s },"
+                         % (json.dumps(event_id), json.dumps(label), json.dumps(name),
+                            json.dumps(country), json.dumps(runner_up or None)))
+        (HERE / "masters.js").write_text(
+            "// AUTO-GENERATED by update_rankings.py - do not edit by hand.\n"
+            "// Singles champions of this year's nine ATP Masters 1000 tournaments, in calendar order,\n"
+            "// from Wikipedia. champion: null means the tournament has not been played yet.\n\n"
+            f"const MASTERS_YEAR = {year};\n\n"
+            "const MASTERS_1000 = [\n" + "\n".join(lines) + "\n];\n", encoding="utf-8")
+        print(f"\nmasters.js updated ({year}): {len(found)} of {len(MASTERS_EVENTS)} champions known.")
+    except Exception as e:
+        print(f"\nMASTERS NOT UPDATED ({type(e).__name__}: {e}); masters.js kept as it was.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--html", help="read this saved HTML file instead of downloading")
@@ -379,6 +483,7 @@ def main():
     print(f"players.js updated (rankings dated {updated}).")
     if not args.no_lookup:
         update_grand_slams(page)
+        update_masters(page)
     if auto_added:
         print("\nNew players added automatically (entries marked \"auto\" in player-details.json):")
         for m in auto_added:

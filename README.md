@@ -24,6 +24,16 @@ or a player's titles would go down, the script leaves `grand-slams.js` as it was
 `GRAND SLAMS NOT UPDATED` plus the reason in the Action's log. Wikipedia can take a few days to
 record a new title, so the tab may lag a Slam by up to a week.
 
+## Masters 1000 tab (automatic)
+
+The weekly run also refreshes `masters.js`: the singles champions of the current year's nine
+Masters 1000 tournaments, read from Wikipedia's page for that season (e.g. "2026 ATP Masters 1000
+tournaments"), shown three per line in calendar order. Tournaments not played yet show "To be
+played", and on 1 January the tab switches to the new year by itself once Wikipedia has its page.
+
+Safety: if the table can't be read, a champion looks odd, or the count would go down within a
+season, the script keeps `masters.js` as it was and prints `MASTERS NOT UPDATED` plus the reason.
+
 ## One-time setup (GitHub Pages)
 
 1. Create a GitHub repository and upload everything in this folder (including `.github`).

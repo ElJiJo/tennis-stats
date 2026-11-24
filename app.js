@@ -253,6 +253,31 @@ function renderSlams() {
     </div>`;
 }
 
+// ---------- Tab 7: Masters 1000 champions (current year) ----------
+// Data comes from masters.js: one entry per tournament, in calendar order, shown
+// three per row. Tournaments not played yet have champion: null.
+
+function renderMasters() {
+  const cards = MASTERS_1000.map(m => m.champion === null
+    ? `<div class="masters-card pending">
+         <div class="masters-event">${m.tournament}</div>
+         <div class="masters-champion muted">To be played</div>
+       </div>`
+    : `<div class="masters-card">
+         <div class="masters-event">${m.tournament}</div>
+         <div class="masters-champion">${m.country ? flag(m.country) + " " : ""}${m.champion}</div>
+         ${m.runnerUp ? `<div class="masters-final muted">Final vs ${m.runnerUp}</div>` : ""}
+       </div>`
+  ).join("");
+
+  document.getElementById("masters").innerHTML = `
+    <div class="card">
+      <h2>${MASTERS_YEAR} Masters 1000 champions</h2>
+      <p class="muted">Singles champions of the nine Masters 1000 tournaments, in calendar order.</p>
+      <div class="masters-grid">${cards}</div>
+    </div>`;
+}
+
 // ---------- Tab switching ----------
 
 function setupTabs() {
@@ -277,7 +302,7 @@ function renderMeta() {
 // ---------- Start ----------
 // Each step runs on its own, so one problem can't blank the whole page.
 
-[renderMeta, renderTop100, renderLefties, renderOneHanders, renderCountries, renderHeight, renderSlams, setupTabs]
+[renderMeta, renderTop100, renderLefties, renderOneHanders, renderCountries, renderHeight, renderSlams, renderMasters, setupTabs]
   .forEach(step => {
     try {
       step();

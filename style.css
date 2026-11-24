@@ -92,10 +92,19 @@ td.total { font-weight: 700; }
 .country-count { width: 28px; text-align: right; font-weight: 700; }
 .country-players { margin: 6px 0 0; font-size: 0.88rem; color: var(--muted); }
 
+/* ---------- Masters 1000 tab: three tournaments per line ---------- */
+.masters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.masters-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: #fafcfa; }
+.masters-card.pending { background: transparent; border-style: dashed; }
+.masters-event { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.masters-champion { font-weight: 700; margin-top: 4px; }
+.masters-final { font-size: 0.85rem; margin-top: 2px; }
+
 /* ---------- Height tab ---------- */
 .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 @media (max-width: 640px) {
   .two-cols { grid-template-columns: 1fr; }
+  .masters-grid { grid-template-columns: 1fr; }
   .country-name { width: 110px; }
 }
 
