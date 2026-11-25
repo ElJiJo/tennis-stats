@@ -55,7 +55,7 @@ def spelling_variant(name, details, used):
 
 
 def download(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "tennis-stats-site/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "tennis-stats-site/1.0 (https://github.com/ElJiJo/tennis-stats; personal hobby project)"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read().decode("utf-8", errors="replace")
 
@@ -63,7 +63,7 @@ def download(url):
 # ---------- Automatic lookup of new players (Wikipedia) ----------
 
 WIKI_API = "https://en.wikipedia.org/w/api.php"
-WIKI_HEADERS = {"User-Agent": "tennis-stats-site/1.0 (personal hobby project; GitHub Actions)"}
+WIKI_HEADERS = {"User-Agent": "tennis-stats-site/1.0 (https://github.com/ElJiJo/tennis-stats; personal hobby project)"}
 
 
 def wiki_get_json(params):
