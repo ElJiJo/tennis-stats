@@ -308,6 +308,30 @@ function setupTabs() {
   });
 }
 
+// ---------- Dark mode ----------
+// The choice is remembered in the visitor's browser.
+
+function setupThemeToggle() {
+  const button = document.getElementById("theme-toggle");
+  const root = document.documentElement;
+
+  // The icon shows what a click will switch to.
+  const showState = () => {
+    const dark = root.dataset.theme === "dark";
+    button.textContent = dark ? "\u2600\uFE0F" : "\u{1F319}";
+    button.title = dark ? "Switch to light mode" : "Switch to dark mode";
+    button.setAttribute("aria-label", button.title);
+  };
+
+  button.addEventListener("click", () => {
+    const theme = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = theme;
+    try { localStorage.setItem("theme", theme); } catch (e) {}
+    showState();
+  });
+  showState();
+}
+
 // ---------- Header date ----------
 
 function renderMeta() {
@@ -318,7 +342,7 @@ function renderMeta() {
 // ---------- Start ----------
 // Each step runs on its own, so one problem can't blank the whole page.
 
-[renderMeta, renderTop100, renderLefties, renderOneHanders, renderCountries, renderHeight, renderSlams, renderMasters, setupTabs]
+[renderMeta, renderTop100, renderLefties, renderOneHanders, renderCountries, renderHeight, renderSlams, renderMasters, setupTabs, setupThemeToggle]
   .forEach(step => {
     try {
       step();

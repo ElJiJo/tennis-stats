@@ -11,9 +11,17 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
   <link rel="stylesheet" href="style.css">
+
+  <!-- Apply a saved dark mode choice before the page is drawn, to avoid a white flash -->
+  <script>
+    try {
+      if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark";
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <header>
+    <button type="button" id="theme-toggle" class="theme-toggle"></button>
     <h1>ATP Top 100 Stats</h1>
     <p class="subtitle">Men's singles &middot; <span id="updated"></span></p>
   </header>
