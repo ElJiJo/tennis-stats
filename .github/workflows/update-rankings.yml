@@ -2,7 +2,8 @@ name: Update ATP rankings
 
 on:
   schedule:
-    - cron: "0 12 * * 2"   # every Tuesday at 12:00 UTC (the source page updates on Mondays)
+    - cron: "0 12 * * 4"   # every Thursday at noon (the source page seems to update Wednesday night or Thursday morning)
+      timezone: "America/New_York"   # Eastern time, follows daylight saving
   workflow_dispatch:        # also lets you run it manually from the Actions tab
 
 permissions:
@@ -17,10 +18,10 @@ jobs:
         run: python3 update_rankings.py
       - name: Commit if rankings changed
         run: |
-          if [ -n "$(git status --porcelain players.js player-details.json grand-slams.js)" ]; then
+          if [ -n "$(git status --porcelain players.js player-details.json grand-slams.js masters.js)" ]; then
             git config user.name "rankings-bot"
             git config user.email "rankings-bot@users.noreply.github.com"
-            git add players.js player-details.json grand-slams.js
+            git add players.js player-details.json grand-slams.js masters.js
             git commit -m "Update ATP rankings"
             git push
           else

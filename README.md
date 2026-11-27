@@ -8,7 +8,7 @@ Open `index.html` in a browser (all the site files must be in the same folder).
   Tennis Abstract and rewrites `players.js`. It needs only Python 3, no installs.
 - `player-details.json` holds each player's height, hand and backhand. These don't change,
   so they are kept by hand.
-- `.github/workflows/update-rankings.yml` runs the script every Tuesday and commits
+- `.github/workflows/update-rankings.yml` runs the script every Thursday at noon Eastern time and commits
   `players.js` if the rankings changed. You can also run it from the repo's **Actions** tab
   ("Run workflow").
 
