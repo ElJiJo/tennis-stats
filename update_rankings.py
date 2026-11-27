@@ -3,6 +3,7 @@
 Refreshes players.js with the current ATP top 100.
 
   rank / name / country  -> scraped from Tennis Abstract (updated weekly)
+  ranking points         -> ESPN's public rankings feed
   height / hand / backhand -> read from player-details.json (these never change)
 
 It also refreshes grand-slams.js (active Grand Slam winners and their titles) from
@@ -54,8 +55,8 @@ def spelling_variant(name, details, used):
     return candidates[0] if len(candidates) == 1 else None
 
 
-def download(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "tennis-stats-site/1.0 (https://github.com/ElJiJo/tennis-stats; personal hobby project)"})
+def download(url, agent="tennis-stats-site/1.0 (https://github.com/ElJiJo/tennis-stats; personal hobby project)"):
+    req = urllib.request.Request(url, headers={"User-Agent": agent})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read().decode("utf-8", errors="replace")
 
@@ -151,6 +152,52 @@ def parse_rankings(page):
 
     updated = re.search(r"Last update:\s*(\d{4}-\d{2}-\d{2})", text)
     return [rows[r] for r in sorted(rows)], (updated.group(1) if updated else "unknown")
+
+
+# ---------- Ranking points (ESPN's public rankings feed) ----------
+# Tennis Abstract has no points column, so they come from a second source.
+
+POINTS_URL = "https://site.api.espn.com/apis/site/v2/sports/tennis/atp/rankings"
+
+
+def match_points(ranking, entries):
+    """{player name: points} for the players found in the feed. Returns {} if the feed
+    looks like a different week (fewer than 90 players with the same rank)."""
+    by_name = {normalize(e["athlete"]["displayName"]): e for e in entries}
+    by_rank = {e["current"]: e for e in entries}
+    points, same_rank = {}, 0
+    for p in ranking:
+        entry = by_name.get(normalize(p["name"]))
+        if not entry:                       # e.g. 'Coleman Wong' vs 'Chak Lam Coleman Wong'
+            other = by_rank.get(p["rank"])
+            if other and normalize(other["athlete"]["displayName"]).endswith(normalize(p["name"].split()[-1])):
+                entry = other
+        if entry:
+            points[p["name"]] = int(entry["points"])
+            same_rank += entry["current"] == p["rank"]
+    return points if same_rank >= 90 else {}
+
+
+def read_old_points(updated):
+    """Points already saved in players.js, only if they are for the same ranking date."""
+    path = HERE / "players.js"
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    if f'LAST_UPDATED = "{updated}"' not in text:
+        return {}
+    return {json.loads(m.group(1)): int(m.group(2))
+            for m in re.finditer(r'name: ("(?:[^"\\]|\\.)*").*?points: (\d+)', text)}
+
+
+def ranking_points(ranking, updated):
+    """Points for the current ranking. Never raises: missing points show as '-'."""
+    try:
+        points = match_points(ranking, json.loads(download(POINTS_URL, "tennis-stats-client/1.0"))["rankings"][0]["ranks"])
+        if points:
+            return points
+        print("POINTS NOT UPDATED: the points feed does not match this week's ranking.")
+    except Exception as e:
+        print(f"POINTS NOT UPDATED ({type(e).__name__}: {e}).")
+    return read_old_points(updated)
 
 
 # ---------- Grand Slam winners (Wikipedia year-by-year table) ----------
@@ -436,8 +483,11 @@ def main():
     # Players matched by exact name first, so the spelling fallback only uses leftovers.
     used = {lookup[normalize(p["name"])][0] for p in ranking if normalize(p["name"]) in lookup}
 
+    points = {} if args.no_lookup else ranking_points(ranking, updated)
+
     lines, missing, auto_added = [], [], []
     for p in ranking:
+        source_name = p["name"]
         match = lookup.get(normalize(p["name"]))
         if not match:
             variant = spelling_variant(p["name"], details, used)
@@ -460,9 +510,10 @@ def main():
             name, height, hand, backhand = p["name"], None, None, None
             missing.append(f'{p["rank"]}. {p["name"]} ({p["country"]})')
         lines.append(
-            "  { rank: %d, name: %s, country: %s, height: %s, hand: %s, backhand: %s },"
+            "  { rank: %d, name: %s, country: %s, height: %s, hand: %s, backhand: %s, points: %s },"
             % (p["rank"], json.dumps(name), json.dumps(p["country"]),
-               json.dumps(height), json.dumps(hand), json.dumps(backhand))
+               json.dumps(height), json.dumps(hand), json.dumps(backhand),
+               json.dumps(points.get(source_name, points.get(name))))
         )
 
     out = (

@@ -6,6 +6,9 @@ Open `index.html` in a browser (all the site files must be in the same folder).
 
 - `update_rankings.py` downloads the current ATP top 100 (rank, name, country) from
   Tennis Abstract and rewrites `players.js`. It needs only Python 3, no installs.
+- Ranking points come from ESPN's public rankings feed (not an officially documented one).
+  If it can't be read or is for a different week, points show as "-" and the Action's log
+  says `POINTS NOT UPDATED`; everything else still updates.
 - `player-details.json` holds each player's height, hand and backhand. These don't change,
   so they are kept by hand.
 - `.github/workflows/update-rankings.yml` runs the script every Thursday at noon Eastern time and commits

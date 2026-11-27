@@ -51,20 +51,39 @@ function cmToFeetInches(cm) {
   return `${Math.floor(totalInches / 12)}'${totalInches % 12}"`;
 }
 
+// "L" -> a "Left" label, "1H" -> a "One-handed" label; "-" if unknown.
+function handLabel(hand) {
+  return hand === null ? "-" : hand === "L" ? '<span class="pill">Left</span>' : "Right";
+}
+
+function backhandLabel(backhand) {
+  return backhand === null ? "-" : backhand === "1H" ? '<span class="pill">One-handed</span>' : "Two-handed";
+}
+
+// Optional columns that a tab can add after Height.
+const EXTRA_COLUMNS = {
+  hand: { title: "Plays", cell: p => handLabel(p.hand) },
+  backhand: { title: "Backhand", cell: p => backhandLabel(p.backhand) },
+};
+
 // Builds an HTML table from a list of players.
-function playersTable(players) {
+function playersTable(players, extras = []) {
+  const columns = extras.map(key => EXTRA_COLUMNS[key]);
   const rows = players.map(p => `
     <tr>
       <td class="num">${p.rank}</td>
       <td>${p.name}</td>
       <td class="center">${flag(p.country)}</td>
       <td class="num">${p.height} cm</td>
+      ${columns.map(c => `<td>${c.cell(p)}</td>`).join("")}
     </tr>`).join("");
   return `
-    <table>
-      <thead><tr><th class="num">Rank</th><th>Player</th><th class="center">Country</th><th class="num">Height</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th class="num">Rank</th><th>Player</th><th class="center">Country</th><th class="num">Height</th>${columns.map(c => `<th>${c.title}</th>`).join("")}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
 }
 
 // Players with full details. New players that are not in player-details.json yet
@@ -80,19 +99,16 @@ function percent(count) {
 // (height is null) are shown with "-" for the details.
 
 function renderTop100() {
-  const rows = PLAYERS.map(p => {
-    const hand = p.hand === null ? "-" : p.hand === "L" ? '<span class="pill">Left</span>' : "Right";
-    const backhand = p.backhand === null ? "-" : p.backhand === "1H" ? '<span class="pill">One-handed</span>' : "Two-handed";
-    return `
+  const rows = PLAYERS.map(p => `
     <tr>
       <td class="num">${p.rank}</td>
       <td>${p.name}</td>
       <td class="center">${flag(p.country)}</td>
       <td class="num">${p.height === null ? "-" : p.height + " cm"}</td>
-      <td>${hand}</td>
-      <td>${backhand}</td>
-    </tr>`;
-  }).join("");
+      <td>${handLabel(p.hand)}</td>
+      <td>${backhandLabel(p.backhand)}</td>
+      <td class="num">${p.points?.toLocaleString("en-US") ?? "-"}</td>
+    </tr>`).join("");
 
   document.getElementById("top100").innerHTML = `
     <div class="card">
@@ -101,7 +117,7 @@ function renderTop100() {
         <table>
           <thead><tr>
             <th class="num">Rank</th><th>Player</th><th class="center">Country</th>
-            <th class="num">Height</th><th>Plays</th><th>Backhand</th>
+            <th class="num">Height</th><th>Plays</th><th>Backhand</th><th class="num">Points</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -120,7 +136,7 @@ function renderLefties() {
     </div>
     <div class="card">
       <h2>Left-handed players</h2>
-      ${playersTable(lefties)}
+      ${playersTable(lefties, ["backhand"])}
     </div>`;
 }
 
@@ -135,7 +151,7 @@ function renderOneHanders() {
     </div>
     <div class="card">
       <h2>One-handed backhand players</h2>
-      ${playersTable(oneHanders)}
+      ${playersTable(oneHanders, ["hand"])}
     </div>`;
 }
 
@@ -199,7 +215,7 @@ function renderHeight() {
     </div>
     <div class="card">
       <h2>All players, tallest first</h2>
-      ${playersTable(byHeight)}
+      ${playersTable(byHeight, ["hand", "backhand"])}
     </div>`;
 }
 
