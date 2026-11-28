@@ -47,7 +47,7 @@ const PLAYERS = [
   { rank: 39, name: "Jan-Lennard Struff", country: "GER", height: 193, hand: "R", backhand: "2H", points: 1296 },
   { rank: 40, name: "Botic van de Zandschulp", country: "NED", height: 191, hand: "R", backhand: "2H", points: 1280 },
   { rank: 41, name: "Nuno Borges", country: "POR", height: 185, hand: "R", backhand: "2H", points: 1241 },
-  { rank: 42, name: "Daniel Merida", country: "ESP", height: 188, hand: "R", backhand: "2H", points: 1237 },
+  { rank: 42, name: "Daniel Merida", country: "ESP", height: 188, hand: "R", backhand: "2H", points: null },
   { rank: 43, name: "Matteo Berrettini", country: "ITA", height: 196, hand: "R", backhand: "2H", points: 1223 },
   { rank: 44, name: "Zizou Bergs", country: "BEL", height: 185, hand: "R", backhand: "2H", points: 1220 },
   { rank: 45, name: "Quentin Halys", country: "FRA", height: 191, hand: "R", backhand: "2H", points: 1214 },
