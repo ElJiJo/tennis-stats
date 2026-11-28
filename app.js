@@ -226,8 +226,8 @@ function renderHeight() {
 function renderSlams() {
   const rows = GRAND_SLAM_WINNERS
     .map(w => {
-      const inRanking = PLAYERS.find(p => p.name === w.name);
-      return { ...w, atpRank: inRanking ? inRanking.rank : null, total: w.ao + w.rg + w.wim + w.uso };
+      // w.rank covers winners ranked outside the top 100.
+      return { ...w, atpRank: w.rank ?? null, total: w.ao + w.rg + w.wim + w.uso };
     })
     .sort((a, b) => b.total - a.total || (a.atpRank ?? 999) - (b.atpRank ?? 999));
 

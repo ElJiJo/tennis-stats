@@ -3,10 +3,10 @@
 // ao = Australian Open, rg = Roland Garros, wim = Wimbledon, uso = US Open.
 
 const GRAND_SLAM_WINNERS = [
-  { name: "Novak Djokovic", country: "SRB", ao: 10, rg: 3, wim: 7, uso: 4 },
-  { name: "Carlos Alcaraz", country: "ESP", ao: 1, rg: 2, wim: 2, uso: 2 },
-  { name: "Jannik Sinner", country: "ITA", ao: 2, rg: 0, wim: 2, uso: 1 },
-  { name: "Alexander Zverev", country: "GER", ao: 0, rg: 1, wim: 0, uso: 1 },
-  { name: "Daniil Medvedev", country: "RUS", ao: 0, rg: 0, wim: 0, uso: 1 },
-  { name: "Marin Cilic", country: "CRO", ao: 0, rg: 0, wim: 0, uso: 1 },
+  { name: "Novak Djokovic", country: "SRB", ao: 10, rg: 3, wim: 7, uso: 4, rank: 12 },
+  { name: "Carlos Alcaraz", country: "ESP", ao: 1, rg: 2, wim: 2, uso: 2, rank: 3 },
+  { name: "Jannik Sinner", country: "ITA", ao: 2, rg: 0, wim: 2, uso: 1, rank: 2 },
+  { name: "Alexander Zverev", country: "GER", ao: 0, rg: 1, wim: 0, uso: 1, rank: 1 },
+  { name: "Daniil Medvedev", country: "RUS", ao: 0, rg: 0, wim: 0, uso: 1, rank: 5 },
+  { name: "Marin Cilic", country: "CRO", ao: 0, rg: 0, wim: 0, uso: 1, rank: 101 },
 ];
